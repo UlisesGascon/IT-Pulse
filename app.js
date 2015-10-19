@@ -18,7 +18,7 @@ var users = require('./routes/users');
 var app = express();
 
 var server = require('http').createServer(app);
-var port = 3000;
+var port = process.env.PORT || 3000;
 server.listen(port);
 console.log("Socket.io server listening on 127.0.0.1:" + port);
 
