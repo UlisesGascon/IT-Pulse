@@ -11,7 +11,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var sentiment = require('sentiment');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -28,50 +27,38 @@ var twitter = require('twitter');
 
 var t = new twitter(credentials);
 
-var keywords = ['github', 'git', 'js', 'javascript' ,'nodejs', 'node'];
+var keywords = ['love', 'hate'];
 var loveCount = 0;
 var hateCount = 0;
 var total = 0;
 
-t.stream('statuses/filter', {track: keywords.join(','), language: 'en, es' }, function(stream){
+t.stream('statuses/filter', {track: keywords.join(',')}, function(stream){
     stream.on('data', function(tweet){
       if(tweet.text !== undefined){
         var text = tweet.text.toLowerCase();
-
-        if(text.indexOf(keywords[0]) > -1 || text.indexOf(keywords[1]) > -1){
-          var data = {
-            tweet: tweet.text,
-            tweetUsserPhoto: tweet.user.profile_image_url,
-            tweeter: tweet.user.screen_name,
-            sentiment: sentiment(tweet.text),
-          };
-          sio.sockets.emit('github', data);
-          console.log("Github & github: "+tweet.text);
-          
-        } 
-        if(text.indexOf(keywords[2]) > -1 || text.indexOf(keywords[3]) > -1){
-          var data = {
-            tweet: tweet.text,
-            tweetUsserPhoto: tweet.user.profile_image_url,
-            tweeter: tweet.user.screen_name,
-            sentiment: sentiment(tweet.text),
-          };
-          sio.sockets.emit('js', data);
-          console.log("Javascript & js: "+tweet.text);
-          
-        }
+        var shouldPrint = false;
         
-        if(text.indexOf(keywords[4]) > -1 || text.indexOf(keywords[5]) > -1){
+        if(text.indexOf(keywords[0]) > -1){
+          loveCount++;
+	  total++;      
+          shouldPrint = true;
+        } 
+        if(text.indexOf(keywords[1]) > -1){
+          hateCount++;
+	  total++;
+          shouldPrint = true;
+        }
+        if(shouldPrint){
           var data = {
             tweet: tweet.text,
-            tweetUsserPhoto: tweet.user.profile_image_url,
             tweeter: tweet.user.screen_name,
-            sentiment: sentiment(tweet.text),
+            love: Math.round(100 * loveCount / total),
+            hate: Math.round(100 * hateCount / total),
+            total: total
           };
-          sio.sockets.emit('nodejs', data);
-          console.log("Nodejs & nodejs: "+tweet.text);
-          
-        } 
+          sio.sockets.emit('tweet', data);
+          console.log(tweet.text);
+        }
       }
     });
 
