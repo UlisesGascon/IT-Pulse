@@ -28,48 +28,48 @@ var twitter = require('twitter');
 
 var t = new twitter(credentials);
 
-var keywords = ['github', 'git', 'js', 'javascript' ,'nodejs', 'node'];
-var loveCount = 0;
-var hateCount = 0;
-var total = 0;
+var keywords = ['github', '#git', 'scrum', '#js', 'javascript', 'jquery', 'angular', 'frontend', 'front-end', 'php', 'python' ,'nodejs', '#node', 'django', 'backend', 'back-end'];
 
 t.stream('statuses/filter', {track: keywords.join(','), language: 'en, es' }, function(stream){
     stream.on('data', function(tweet){
       if(tweet.text !== undefined){
         var text = tweet.text.toLowerCase();
 
-        if(text.indexOf(keywords[0]) > -1 || text.indexOf(keywords[1]) > -1){
+        if(text.indexOf(keywords[0]) > -1 || text.indexOf(keywords[1]) > -1 || text.indexOf(keywords[2]) > -1){
           var data = {
             tweet: tweet.text,
+            tweetId: tweet.id_str,
             tweetUsserPhoto: tweet.user.profile_image_url,
             tweeter: tweet.user.screen_name,
             sentiment: sentiment(tweet.text),
           };
           sio.sockets.emit('github', data);
-          console.log("Github & github: "+tweet.text);
+          console.log("Github, Git and Scrum: "+tweet.text);
           
         } 
-        if(text.indexOf(keywords[2]) > -1 || text.indexOf(keywords[3]) > -1){
+        if(text.indexOf(keywords[3]) > -1 || text.indexOf(keywords[4]) > -1 || text.indexOf(keywords[5]) > -1 || text.indexOf(keywords[6]) > -1 || text.indexOf(keywords[7]) > -1 || text.indexOf(keywords[8]) > -1){
           var data = {
             tweet: tweet.text,
+            tweetId: tweet.id_str,
             tweetUsserPhoto: tweet.user.profile_image_url,
             tweeter: tweet.user.screen_name,
             sentiment: sentiment(tweet.text),
           };
           sio.sockets.emit('js', data);
-          console.log("Javascript & js: "+tweet.text);
+          console.log("Frontend, Javascript, Jquery and Angular: "+tweet.text);
           
         }
         
-        if(text.indexOf(keywords[4]) > -1 || text.indexOf(keywords[5]) > -1){
+        if(text.indexOf(keywords[9]) > -1 || text.indexOf(keywords[10]) > -1 || text.indexOf(keywords[11]) > -1 || text.indexOf(keywords[12]) > -1 || text.indexOf(keywords[13]) > -1 || text.indexOf(keywords[14]) > -1|| text.indexOf(keywords[15]) > -1){
           var data = {
             tweet: tweet.text,
+            tweetId: tweet.id_str,
             tweetUsserPhoto: tweet.user.profile_image_url,
             tweeter: tweet.user.screen_name,
             sentiment: sentiment(tweet.text),
           };
           sio.sockets.emit('nodejs', data);
-          console.log("Nodejs & nodejs: "+tweet.text);
+          console.log("Backend, Php, Python, Nodejs and Django: "+tweet.text);
           
         } 
       }
