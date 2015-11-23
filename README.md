@@ -1,7 +1,4 @@
-Mitchell Neville
-
-[CSC 591 - P1](http://github.com/losmescaleros/twitter-sentiments 
-"GitHub Project")
+![dependencies](https://david-dm.org/UlisesGascon/twitter-sentiments.svg)
 
 # Twitter Sentiments
 
